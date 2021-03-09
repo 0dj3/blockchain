@@ -36,12 +36,14 @@ contract Test
     
     struct Employee
     {
+        uint passNum;
+        uint passSer;
         string name;
         string position;
         string phoneNumber;
     }
     
-    mapping(address => Employee) private emplyees;
+    mapping(string => Employee) private emplyees; //TORO изменить ключ на что-то другое
     mapping(address => Owner) private owners;
     mapping(address => Request) private requests;
     mapping(string => Home) private homes;
@@ -59,5 +61,25 @@ contract Test
     function GetHome(string memory adr) public returns(uint _area, uint _cost)
     {
         return (homes[adr].area, homes[adr].cost);
+    }
+     
+    function AddEmployee(string memory _name, string memory _position, string memory _phoneNumber) public
+    {
+        Employee memory e;
+        e.name = _name;
+        e.position = _position;
+        e.phoneNumber = _phoneNumber;
+        emplyees[_phoneNumber] = e;
+    }
+    
+    function EditEmployee(string memory phoneNumber, string memory _nameEmployee, string memory _position) public
+    {
+       emplyees[phoneNumber].name = _nameEmployee;
+       emplyees[phoneNumber].position = _position;
+    }
+    
+    function GetEmployee(string memory phoneNumber) public returns(string memory _name, string memory _position)
+    {
+         return (emplyees[phoneNumber].name, emplyees[phoneNumber].position);
     }
 }
