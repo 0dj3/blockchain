@@ -36,23 +36,8 @@ contract Test
     Request private request;
     Employee private employee;
     
-    function SetRequest(int _requestType, string _homeAddress, fixed _area, uint _cost,  ) public
-    {
-        
-    }
-    
-    function Test1(string memory Message) public 
-    {
-        message = Message;
-    }
-    
-    function SetMessage(string memory newMessage) public
-    {
-        message = newMessage;
-    }
-    
-    function GetMessage() public returns (string memory)
-    {
-        return message;
-    }
+    //function SetRequest(int _requestType, string _homeAddress, fixed _area, uint _cost,  ) public
+    //{
+    //    
+    //}
 }
