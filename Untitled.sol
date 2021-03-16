@@ -36,19 +36,19 @@ contract Test
     
     struct Employee
     {
-        uint passNum;
-        uint passSer;
+        string id;
         string name;
         string position;
         string phoneNumber;
     }
     
-    mapping(string => Employee) private emplyees; //TORO изменить ключ на что-то другое
+    mapping(string => Employee) private employees;
     mapping(address => Owner) private owners;
     mapping(address => Request) private requests;
     mapping(string => Home) private homes;
     mapping(string => Ownership[]) private ownerships;
     
+    // ДОМ
     function AddHome(string memory _adr, uint _area, uint _cost) public
     {
         Home memory h;
@@ -62,24 +62,37 @@ contract Test
     {
         return (homes[adr].area, homes[adr].cost);
     }
-     
-    function AddEmployee(string memory _name, string memory _position, string memory _phoneNumber) public
+    
+    function EditHome(string memory _adr, uint _area, uint _cost) public
+    {
+        homes[_adr].area = _area;
+        homes[_adr].cost = _cost;
+    }
+    
+    // РАБОТНИК
+    function AddEmployee(string memory _id, string memory _name, string memory _position, string memory _phoneNumber) public
     {
         Employee memory e;
         e.name = _name;
         e.position = _position;
         e.phoneNumber = _phoneNumber;
-        emplyees[_phoneNumber] = e;
+        employees[_id] = e;
     }
     
-    function EditEmployee(string memory phoneNumber, string memory _nameEmployee, string memory _position) public
+    function GetEmployee(string memory id) public returns(string memory _name, string memory _position, string memory _phoneNumber)
     {
-       emplyees[phoneNumber].name = _nameEmployee;
-       emplyees[phoneNumber].position = _position;
+        return (employees[id].name, employees[id].position, employees[id].phoneNumber);
     }
     
-    function GetEmployee(string memory phoneNumber) public returns(string memory _name, string memory _position)
+    function EditEmployee(string memory _id, string memory _name, string memory _position, string memory _phoneNumber) public
     {
-         return (emplyees[phoneNumber].name, emplyees[phoneNumber].position);
+        employees[_id].name = _name;
+        employees[_id].position = _position;
+        employees[_id].phoneNumber = _phoneNumber;
+    }
+    
+    function DeleteEmployee(string memory id) public
+    {
+        delete employees[id];
     }
 }
