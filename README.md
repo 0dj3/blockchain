@@ -1,4 +1,4 @@
-# ВИДЮХА КРУТИТСЯ - ЭФИРЧИК МУТИТЬСЯ 
+# ВИДЮХА КРУТИТСЯ - ЭФИРЧИК МУТИТСЯ 
 ![farming](https://thumbs.gfycat.com/FamousViciousIvorygull-max-14mb.gif)
 ## Задачи
 - [x] Добавить структуры
