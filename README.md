@@ -7,4 +7,5 @@
 - [x] Редактирование сотрудника
 - [ ] Добавить запрос на новый дом(All)
 - [ ] Получение списка запросов(OnlyOwner)
+
 ![mining](https://thumbs.gfycat.com/AgonizingImaginaryInvisiblerail-max-1mb.gif)
