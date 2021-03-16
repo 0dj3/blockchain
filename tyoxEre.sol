@@ -1,7 +1,37 @@
 pragma solidity >=0.4.22 <0.6.0;
-//Bolodje-FIIT-17
+//?owner_identity>>b0l-000-dj3
 
-contract Test
+contract Owned
+{
+    address private owner;
+    
+    constructor() public
+    {
+        owner = msg.sender;
+    }
+    
+    modifier OnlyOwner
+    {
+        require
+        (
+            msg.sender == owner,
+            'Only owner can run this function!'
+        );
+        _;
+    }
+    
+    function ChangeOwner(address newOwner) public OnlyOwner
+    {
+        owner = newOwner;
+    }
+    
+    function GetOwner() public returns (address)
+    {
+        return owner;
+    }
+}
+
+contract ROSReestr is Owned
 {
     enum RequestType {NewHome, EditHome}
     
@@ -40,6 +70,7 @@ contract Test
         string name;
         string position;
         string phoneNumber;
+        bool isset;
     }
     
     mapping(address => Employee) private employees;
@@ -47,6 +78,16 @@ contract Test
     mapping(address => Request) private requests;
     mapping(string => Home) private homes;
     mapping(string => Ownership[]) private ownerships;
+    
+    modifier OnlyEmployee
+    {
+        require
+        (
+            employees[msg.sender].isset != false,
+            'Only Employee can run this function'
+        );
+        _;
+    }
     
     //-------------------------ДОМ-------------------------// 
     function AddHome(string memory _adr, uint _area, uint _cost) public
@@ -70,28 +111,29 @@ contract Test
     }
     
     //-------------------------РАБОТНИК-------------------------// 
-    function AddEmployee(address _adr, string memory _name, string memory _position, string memory _phoneNumber) public
+    function AddEmployee(address _adr, string memory _name, string memory _position, string memory _phoneNumber) public OnlyOwner
     {
         Employee memory e;
         e.name = _name;
         e.position = _position;
         e.phoneNumber = _phoneNumber;
+        e.isset = true;
         employees[_adr] = e;
     }
     
-    function GetEmployee(address adr) public returns(string memory _name, string memory _position, string memory _phoneNumber)
+    function GetEmployee(address adr) public OnlyOwner returns(string memory _name, string memory _position, string memory _phoneNumber)
     {
         return (employees[adr].name, employees[adr].position, employees[adr].phoneNumber);
     }
     
-    function EditEmployee(address _adr, string memory _name, string memory _position, string memory _phoneNumber) public
+    function EditEmployee(address _adr, string memory _name, string memory _position, string memory _phoneNumber) public OnlyOwner
     {
         employees[_adr].name = _name;
         employees[_adr].position = _position;
         employees[_adr].phoneNumber = _phoneNumber;
     }
     
-    function DeleteEmployee(address _adr) public
+    function DeleteEmployee(address _adr) public OnlyOwner
     {
         delete employees[_adr];
     }
