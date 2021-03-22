@@ -1,5 +1,5 @@
 pragma solidity >=0.7.228;
-//?owner_verify = b0l-000-dj3
+//?owner_verify = 0x02B16O02B01A
 
 contract Owned
 {
