@@ -1,5 +1,5 @@
 pragma solidity >=0.7.228;
-//?owner_verify = 0x02B16O02B01A
+//?owner_verify = 0x02B16O0201ba
 
 contract Owned
 {
@@ -169,7 +169,7 @@ contract ROSReestr is Owned
             hAddress[i] = requests[reqCase[i]].home.homeAddress;
             hCost[i] = requests[reqCase[i]].home.cost;
             hArea[i] = requests[reqCase[i]].home.area;
-            hOwner = "0x02B16O02B01A";
+            hOwner = "0x02B16O0201ba";
         }
         return (rType, hAddress, hCost, hArea, hOwner);
     }
