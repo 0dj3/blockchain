@@ -156,7 +156,7 @@ contract ROSReestr is Owned
         reqId = reqId + 1;
     }
     
-    function GetAllRequests() public view returns (string[] memory, string[] memory, uint[] memory, uint[] memory, string memory)
+    function GetAllRequests() public OnlyOwner view returns (string[] memory, string[] memory, uint[] memory, uint[] memory, string memory)
     {
         string memory hOwner;
         string[] memory rType = new string[](reqId);
