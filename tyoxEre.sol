@@ -141,29 +141,36 @@ contract ROSReestr is Owned
     }
     
     //============================ЗАПРОС============================// 
-    function AddHomeRequest(address _adr, string memory _home) public payable
+    function AddHomeRequest(address _adr, string memory _homeAddress, uint _area, uint _cost) public payable
     {
+        Home memory h;
         Request memory r;
+        h.homeAddress = _homeAddress;
+        h.area = _area;
+        h.cost = _cost;
         r.requestType = RequestType.NewHome;
-        r.home = homes[_home];
+        r.home = h;
         r.result = 1;
         requests[_adr] = r;
         reqCase[reqId] = _adr;
         reqId = reqId + 1;
     }
     
-    function GetAllRequests() public view returns (string[] memory, uint[] memory, uint[] memory)
+    function GetAllRequests() public view returns (string[] memory, string[] memory, uint[] memory, uint[] memory, string memory)
     {
-        string memory hOwner = "0х02b16o02b01a";
+        string memory hOwner;
+        string[] memory rType = new string[](reqId);
         string[] memory hAddress = new string[](reqId);
         uint[] memory hCost = new uint[](reqId);
         uint[] memory hArea = new uint[](reqId);
         for (uint i = 0; i < reqId; i++) 
         {
+            rType[i] = requests[reqCase[i]].requestType == RequestType.NewHome ? "NewHome" : "EditHome";
             hAddress[i] = requests[reqCase[i]].home.homeAddress;
             hCost[i] = requests[reqCase[i]].home.cost;
             hArea[i] = requests[reqCase[i]].home.area;
+            hOwner = "0x02B16O02B01A";
         }
-        return (hAddress, hCost, hArea);
+        return (rType, hAddress, hCost, hArea, hOwner);
     }
 }
