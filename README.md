@@ -5,7 +5,7 @@
 - [x] Добавить функцию DeleteEmployee(OnlyOwner)
 - [x] Добавление сотрудника
 - [x] Редактирование сотрудника
-- [ ] Добавить запрос на новый дом(All)
-- [ ] Получение списка запросов(OnlyOwner)
+- [x] Добавить запрос на новый дом(All)
+- [x] Получение списка запросов(OnlyOwner)
 
 ![mining](https://thumbs.gfycat.com/AgonizingImaginaryInvisiblerail-max-1mb.gif)
