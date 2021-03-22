@@ -15,7 +15,7 @@ contract Owned
         require
         (
             msg.sender == owner,
-            'Only owner can run this function!'
+            'IMPOSTER HAS BEEN OBNARUJEN!'
         );
         _;
     }
@@ -154,6 +154,7 @@ contract ROSReestr is Owned
     
     function GetAllRequests() public view returns (string[] memory, uint[] memory, uint[] memory)
     {
+        string memory hOwner = "0х02b16o02b01a";
         string[] memory hAddress = new string[](reqId);
         uint[] memory hCost = new uint[](reqId);
         uint[] memory hArea = new uint[](reqId);
