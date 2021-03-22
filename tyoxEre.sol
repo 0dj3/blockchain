@@ -1,5 +1,5 @@
-pragma solidity >=0.4.22 <0.6.0;
-//?owner_identity>>b0l-000-dj3
+pragma solidity >=0.7.228;
+//?owner_verify = b0l-000-dj3
 
 contract Owned
 {
@@ -76,6 +76,8 @@ contract ROSReestr is Owned
     mapping(address => Employee) private employees;
     mapping(address => Owner) private owners;
     mapping(address => Request) private requests;
+    mapping(uint => address) private reqCase;
+    uint reqId = 0;
     mapping(string => Home) private homes;
     mapping(string => Ownership[]) private ownerships;
     
@@ -89,7 +91,7 @@ contract ROSReestr is Owned
         _;
     }
     
-    //-------------------------ДОМ-------------------------// 
+    //============================ДОМ============================//
     function AddHome(string memory _adr, uint _area, uint _cost) public
     {
         Home memory h;
@@ -110,7 +112,7 @@ contract ROSReestr is Owned
         homes[_adr].cost = _cost;
     }
     
-    //-------------------------РАБОТНИК-------------------------// 
+    //============================РАБОТНИК============================// 
     function AddEmployee(address _adr, string memory _name, string memory _position, string memory _phoneNumber) public OnlyOwner
     {
         Employee memory e;
@@ -136,5 +138,31 @@ contract ROSReestr is Owned
     function DeleteEmployee(address _adr) public OnlyOwner
     {
         delete employees[_adr];
+    }
+    
+    //============================ЗАПРОС============================// 
+    function AddHomeRequest(address _adr, string memory _home) public payable
+    {
+        Request memory r;
+        r.requestType = RequestType.NewHome;
+        r.home = homes[_home];
+        r.result = 1;
+        requests[_adr] = r;
+        reqCase[reqId] = _adr;
+        reqId = reqId + 1;
+    }
+    
+    function GetAllRequests() public view returns (string[] memory, uint[] memory, uint[] memory)
+    {
+        string[] memory hAddress = new string[](reqId);
+        uint[] memory hCost = new uint[](reqId);
+        uint[] memory hArea = new uint[](reqId);
+        for (uint i = 0; i < reqId; i++) 
+        {
+            hAddress[i] = requests[reqCase[i]].home.homeAddress;
+            hCost[i] = requests[reqCase[i]].home.cost;
+            hArea[i] = requests[reqCase[i]].home.area;
+        }
+        return (hAddress, hCost, hArea);
     }
 }
