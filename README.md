@@ -6,6 +6,8 @@
 - [x] Добавление сотрудника
 - [x] Редактирование сотрудника
 - [x] Добавить запрос на новый дом(All)
-- [x] Получение списка запросов(OnlyOwner)
+- [x] Получение списка запросов(OnlyEmployee)
+- [ ] Добавить цену за запрос
+- [ ] Добавить функцию изменения цены запроса(OnlyOwner)
 
 ![mining](https://thumbs.gfycat.com/AgonizingImaginaryInvisiblerail-max-1mb.gif)
