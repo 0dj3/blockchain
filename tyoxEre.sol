@@ -1,5 +1,4 @@
 pragma solidity >=0.7.228;
-//?owner_verify = 0x02B16O0201ba
 
 contract Owned
 {
@@ -15,7 +14,7 @@ contract Owned
         require
         (
             msg.sender == owner,
-            'IMPOSTER HAS BEEN OBNARUJEN!'
+            'IMPOSTER OBNARUJEN!'
         );
         _;
     }
@@ -61,7 +60,7 @@ contract ROSReestr is Owned
     struct Request
     {
         RequestType requestType;
-        Home home;
+        Home home; 
         uint result;
     }
     
@@ -86,7 +85,7 @@ contract ROSReestr is Owned
         require
         (
             employees[msg.sender].isset != false,
-            'Only Employee can run this function'
+            'Are you rabotnik? Net? Nu togda go home!'
         );
         _;
     }
@@ -135,9 +134,14 @@ contract ROSReestr is Owned
         employees[_adr].phoneNumber = _phoneNumber;
     }
     
-    function DeleteEmployee(address _adr) public OnlyOwner
+    function DeleteEmployee(address _adr) public OnlyOwner returns(bool)
     {
-        delete employees[_adr];
+        if (employees[_adr].isset == true)
+        {
+            delete employees[_adr];
+            return true;
+        }
+        return false;
     }
     
     //============================ЗАПРОС============================// 
@@ -156,9 +160,8 @@ contract ROSReestr is Owned
         reqId = reqId + 1;
     }
     
-    function GetAllRequests() public OnlyOwner view returns (string[] memory, string[] memory, uint[] memory, uint[] memory, string memory)
+    function GetAllRequests() public OnlyOwner view returns (string[] memory, string[] memory, uint[] memory, uint[] memory)
     {
-        string memory hOwner;
         string[] memory rType = new string[](reqId);
         string[] memory hAddress = new string[](reqId);
         uint[] memory hCost = new uint[](reqId);
@@ -169,8 +172,7 @@ contract ROSReestr is Owned
             hAddress[i] = requests[reqCase[i]].home.homeAddress;
             hCost[i] = requests[reqCase[i]].home.cost;
             hArea[i] = requests[reqCase[i]].home.area;
-            hOwner = "0x02B16O0201ba";
         }
-        return (rType, hAddress, hCost, hArea, hOwner);
+        return (rType, hAddress, hCost, hArea);
     }
 }
