@@ -4,7 +4,7 @@ contract Owned
 {
     address private owner;
     
-    constructor() public
+    constructor() public 
     {
         owner = msg.sender;
     }
@@ -19,7 +19,7 @@ contract Owned
         _;
     }
     
-    function ChangeOwner(address newOwner) public OnlyOwner
+    function ChangeOwner(address payable newOwner) public OnlyOwner
     {
         owner = newOwner;
     }
@@ -32,6 +32,7 @@ contract Owned
 
 contract ROSReestr is Owned
 {
+    
     enum RequestType {NewHome, EditHome}
     
     struct Ownership
@@ -61,7 +62,9 @@ contract ROSReestr is Owned
     {
         RequestType requestType;
         Home home; 
+        bool isProcessed;
         uint result;
+        address adr;
     }
     
     struct Employee
@@ -75,10 +78,11 @@ contract ROSReestr is Owned
     mapping(address => Employee) private employees;
     mapping(address => Owner) private owners;
     mapping(address => Request) private requests;
-    mapping(uint => address) private reqCase;
-    uint reqId = 0;
+    address[] requestsInitiator;
     mapping(string => Home) private homes;
     mapping(string => Ownership[]) private ownerships;
+    
+    uint private amount;
     
     modifier OnlyEmployee
     {
@@ -90,7 +94,17 @@ contract ROSReestr is Owned
         _;
     }
     
+    modifier Costs(uint _value)
+    {
+        require(
+            msg.value >= _value,
+            'Po4 tut tak malo?!'
+            );
+            _;
+    }
+    
     //============================ДОМ============================//
+    
     function AddHome(string memory _adr, uint _area, uint _cost) public
     {
         Home memory h;
@@ -112,6 +126,7 @@ contract ROSReestr is Owned
     }
     
     //============================РАБОТНИК============================// 
+    
     function AddEmployee(address _adr, string memory _name, string memory _position, string memory _phoneNumber) public OnlyOwner
     {
         Employee memory e;
@@ -145,34 +160,36 @@ contract ROSReestr is Owned
     }
     
     //============================ЗАПРОС============================// 
-    function AddHomeRequest(address _adr, string memory _homeAddress, uint _area, uint _cost) public payable
+    
+    function AddHomeRequest(uint _rType, string memory _homeAddress, uint _area, uint _cost, address _newOwner) public payable Costs(1e12) returns(bool)
     {
         Home memory h;
-        Request memory r;
         h.homeAddress = _homeAddress;
         h.area = _area;
         h.cost = _cost;
-        r.requestType = RequestType.NewHome;
+        Request memory r;
+        r.requestType = _rType == 0? RequestType.NewHome : RequestType.EditHome;
         r.home = h;
-        r.result = 1;
-        requests[_adr] = r;
-        reqCase[reqId] = _adr;
-        reqId = reqId + 1;
+        r.result = 0;
+        r.adr = _rType == 0 ? address(0) : _newOwner;
+        r.isProcessed = false;
+        requests[msg.sender] = r;
+        requestsInitiator.push(msg.sender);
+        amount += msg.value;
+        return true;
     }
     
-    function GetAllRequests() public OnlyOwner view returns (string[] memory, string[] memory, uint[] memory, uint[] memory)
+    function GetRequest() public OnlyEmployee view returns (uint[] memory, uint[] memory, string[] memory)
     {
-        string[] memory rType = new string[](reqId);
-        string[] memory hAddress = new string[](reqId);
-        uint[] memory hCost = new uint[](reqId);
-        uint[] memory hArea = new uint[](reqId);
-        for (uint i = 0; i < reqId; i++) 
+        uint[] memory ids = new uint[](requestsInitiator.length);
+        uint[] memory types = new uint[](requestsInitiator.length);
+        string[] memory homeAddress = new string[](requestsInitiator.length);
+        for(uint i = 0; i != requestsInitiator.length; i++)
         {
-            rType[i] = requests[reqCase[i]].requestType == RequestType.NewHome ? "NewHome" : "EditHome";
-            hAddress[i] = requests[reqCase[i]].home.homeAddress;
-            hCost[i] = requests[reqCase[i]].home.cost;
-            hArea[i] = requests[reqCase[i]].home.area;
+            ids[i] = i;
+            types[i] = requests[requestsInitiator[i]].requestType == RequestType.NewHome ? 0 : 1;
+            homeAddress[i] = requests[requestsInitiator[i]].home.homeAddress;
         }
-        return (rType, hAddress, hCost, hArea);
+        return (ids, types, homeAddress);
     }
 }
