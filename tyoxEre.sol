@@ -1,10 +1,10 @@
-pragma solidity >=0.7.228;
+pragma experimental ABIEncoderV2;
 
 contract Owned
 {
-    address private owner;
+    address payable private  owner;
     
-    constructor() public 
+    constructor() public
     {
         owner = msg.sender;
     }
