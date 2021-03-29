@@ -32,9 +32,9 @@ contract Owned
 
 contract ROSReestr is Owned
 {
-    uint256 private prize = 1e12;//Цена 
-    
     enum RequestType {NewHome, EditHome}
+    
+    //============================СТРУКТУРЫ============================//
     
     struct Ownership
     {
@@ -76,6 +76,8 @@ contract ROSReestr is Owned
         bool isset;
     }
     
+    //============================ПЕРЕМЕННЫЕ============================//
+    
     mapping(address => Employee) private employees;
     mapping(address => Owner) private owners;
     mapping(address => Request) private requests;
@@ -84,6 +86,9 @@ contract ROSReestr is Owned
     mapping(string => Ownership[]) private ownerships;
     
     uint private amount;
+    uint256 private prize = 1e12;//Цена
+    
+    //============================МОДИФИКАТОРЫ============================// 
     
     modifier OnlyEmployee
     {
