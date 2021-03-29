@@ -32,6 +32,7 @@ contract Owned
 
 contract ROSReestr is Owned
 {
+    uint256 private prize = 1e12;//Цена 
     
     enum RequestType {NewHome, EditHome}
     
@@ -161,7 +162,7 @@ contract ROSReestr is Owned
     
     //============================ЗАПРОС============================// 
     
-    function AddHomeRequest(uint _rType, string memory _homeAddress, uint _area, uint _cost, address _newOwner) public payable Costs(1e12) returns(bool)
+    function AddRequest(uint _rType, string memory _homeAddress, uint _area, uint _cost, address _newOwner) public payable Costs(prize) returns(bool)
     {
         Home memory h;
         h.homeAddress = _homeAddress;
@@ -191,5 +192,11 @@ contract ROSReestr is Owned
             homeAddress[i] = requests[requestsInitiator[i]].home.homeAddress;
         }
         return (ids, types, homeAddress);
+    }
+    
+    //============================ЦЕНА============================//
+    function ChangePrice(uint256 _newPrice) public OnlyOwner
+    {
+        prize = _newPrice;
     }
 }
