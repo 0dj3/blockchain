@@ -57,6 +57,7 @@ contract ROSReestr is Owned
         string homeAddress;
         uint area;
         uint cost;
+        bool isExist;
     }
     
     struct Request
@@ -86,7 +87,7 @@ contract ROSReestr is Owned
     mapping(string => Ownership[]) private ownerships;
     
     uint private amount;
-    uint256 private prize = 1e12;//Цена
+    uint256 private prize = 100 wei;//Цена
     
     //============================МОДИФИКАТОРЫ============================// 
     
@@ -100,7 +101,7 @@ contract ROSReestr is Owned
         _;
     }
     
-    modifier Costs(uint _value)
+    modifier Costs(uint256 _value)
     {
         require(
             msg.value >= _value,
@@ -108,6 +109,29 @@ contract ROSReestr is Owned
             );
             _;
     }
+    
+    //============================ВЛАДЕЛЕЦ============================//
+    
+    function AddOwnership(string memory _homeAddress, address _owner, uint _p) public
+    {
+        Ownership memory o;
+        o.homeAddress = _homeAddress;
+        o.owner = _owner;
+        o.p = _p;
+        //ownerships[_homeAddress] = o;
+    }
+    
+    function EditOwnership(string memory _homeAddress, address _owner, uint _p) public
+    {
+       // ownerships[_homeAddress].owner = _owner;
+        //ownerships[_homeAddress].p = _p;
+    }
+    
+    function DeleteOwnership(string memory _homeAddress, address _owner) public
+    {
+        delete ownerships[_homeAddress]; //TODO переделать
+    }
+    
     
     //============================ДОМ============================//
     
@@ -117,6 +141,7 @@ contract ROSReestr is Owned
         h.homeAddress = _adr;
         h.area = _area;
         h.cost = _cost;
+        h.isExist = true;
         homes[_adr] = h;
     }
     
@@ -199,9 +224,51 @@ contract ROSReestr is Owned
         return (ids, types, homeAddress);
     }
     
+    function DeleteRequest(uint _reqId) public
+    {
+        delete requests[requestsInitiator[_reqId]];
+    }
+    
     //============================ЦЕНА============================//
+    
     function ChangePrice(uint256 _newPrice) public OnlyOwner
     {
         prize = _newPrice;
+    }
+    
+    function GetPrice() public view returns(uint256, string memory)
+    {
+        return (prize, " wei");
+    }
+    
+    //============================ОБРАБОТКА============================// 
+    
+    function Obrabotka(uint _reqId) public OnlyEmployee returns(string memory)
+    {
+        if (requests[requestsInitiator[_reqId]].requestType == RequestType.NewHome)
+        {
+            if(homes[requests[requestsInitiator[_reqId]].home.homeAddress].isExist == false)
+            {
+                AddHome(requests[requestsInitiator[_reqId]].home.homeAddress,requests[requestsInitiator[_reqId]].home.area, requests[requestsInitiator[_reqId]].home.cost);
+                DeleteRequest(_reqId);
+                delete requestsInitiator[_reqId];
+                return "Home dobablen!";
+            }
+           
+        }
+        else
+        {
+            if(homes[requests[requestsInitiator[_reqId]].home.homeAddress].isExist == true)
+            {
+                EditHome(requests[requestsInitiator[_reqId]].home.homeAddress,requests[requestsInitiator[_reqId]].home.area, requests[requestsInitiator[_reqId]].home.cost);
+                DeleteRequest(_reqId);
+                delete requestsInitiator[_reqId];
+                return "Home edited";
+            }
+            else
+            {
+                return "Home ne exist";
+            }
+        }
     }
 }
