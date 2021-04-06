@@ -118,13 +118,12 @@ contract ROSReestr is Owned
         o.homeAddress = _homeAddress;
         o.owner = _owner;
         o.p = _p;
-        //ownerships[_homeAddress] = o;
+        ownerships[_homeAddress].push(o);
     }
     
     function EditOwnership(string memory _homeAddress, address _owner, uint _p) public
     {
-       // ownerships[_homeAddress].owner = _owner;
-        //ownerships[_homeAddress].p = _p;
+        //TODO доделать
     }
     
     function DeleteOwnership(string memory _homeAddress, address _owner) public
@@ -132,6 +131,19 @@ contract ROSReestr is Owned
         delete ownerships[_homeAddress]; //TODO переделать
     }
     
+    function GetOwnership(string memory adr) public view returns(uint[] memory, address[] memory)
+    {
+        //Ownership[] memory ownership = new Ownership[](ownerships[adr].length);
+        uint[] memory p = new uint[](ownerships[adr].length);
+        address[] memory ownerAddress = new address[](ownerships[adr].length);
+        for(uint i = 0; i != ownerships[adr].length; i++)
+        {
+            p[i] = ownerships[adr][i].p;
+            ownerAddress[i] = ownerships[adr][i].owner;
+            
+        }
+        return(p, ownerAddress);
+    }
     
     //============================ДОМ============================//
     
